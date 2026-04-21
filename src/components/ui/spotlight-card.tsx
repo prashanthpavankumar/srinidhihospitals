@@ -168,7 +168,6 @@ const GlowCard: React.FC<GlowCardProps> = ({
           shadow-[0_1rem_3rem_-1rem_rgba(0,0,0,0.3)] 
           p-6
           gap-4 
-          backdrop-blur-[10px]
           border-white/10
           ${className}
         `}

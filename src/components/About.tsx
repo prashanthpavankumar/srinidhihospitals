@@ -36,7 +36,7 @@ export function About() {
         {/* Right Side: Mission/Vision Cards */}
         <div className="grid gap-6">
           <div className="premium-card p-10 bg-primary text-white rounded-[2.5rem] shadow-2xl shadow-primary/20 relative overflow-hidden group">
-            <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/5 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700" />
+            <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/10 rounded-full" />
             <Target className="mb-6 opacity-80" size={48} />
             <h3 className="text-2xl font-bold mb-4 italic">Our Mission</h3>
             <p className="text-primary-foreground/90 text-lg leading-relaxed">
@@ -45,7 +45,7 @@ export function About() {
           </div>
 
           <div className="premium-card p-10 bg-neutral-900 text-white rounded-[2.5rem] shadow-2xl shadow-black/10 relative overflow-hidden group">
-            <div className="absolute bottom-[-20%] left-[-10%] w-64 h-64 bg-white/5 rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700" />
+            <div className="absolute bottom-[-20%] left-[-10%] w-64 h-64 bg-white/10 rounded-full" />
             <Eye className="mb-6 opacity-80" size={48} />
             <h3 className="text-2xl font-bold mb-4 italic">Our Vision</h3>
             <p className="text-white/70 text-lg leading-relaxed">

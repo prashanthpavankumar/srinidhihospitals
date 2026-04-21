@@ -47,7 +47,7 @@ const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
     return (
       <div
         ref={ref}
-        className={cn("group h-[340px] w-full max-w-[340px] [perspective:1400px] cursor-pointer mx-auto", className)}
+        className={cn("group h-[340px] w-full max-w-[340px] cursor-pointer mx-auto touch-pan-y", className)}
         {...props}
       >
         <div className={cn(
@@ -61,7 +61,7 @@ const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
           {/* Glass Layer */}
           <div className={cn(
             "absolute inset-3 rounded-[40px] border-b border-l [transform-style:preserve-3d] [transform:translate3d(0,0,25px)] transition-all duration-500",
-            isLight ? "border-primary/10 bg-gradient-to-b from-primary/5 to-transparent backdrop-blur-[4px] group-hover:border-primary/20" : "border-white/10 bg-gradient-to-b from-white/10 to-transparent backdrop-blur-[2px] group-hover:border-white/20"
+            isLight ? "border-primary/10 bg-gradient-to-b from-primary/5 to-transparent group-hover:border-primary/20" : "border-white/10 bg-gradient-to-b from-white/10 to-transparent group-hover:border-white/20"
           )}></div>
           
           {/* Content Layer */}
