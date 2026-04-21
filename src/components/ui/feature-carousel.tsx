@@ -260,7 +260,7 @@ export function FeatureCarousel() {
 
                   <div
                     className={cn(
-                      "absolute top-8 left-8 flex items-center gap-3 transition-opacity duration-300 bg-black/30 backdrop-blur-md px-4 py-2 rounded-full border border-white/20",
+                      "absolute top-8 left-8 flex items-center gap-3 transition-opacity duration-300 bg-black/50 px-4 py-2 rounded-full border border-white/20",
                       isActive ? "opacity-100" : "opacity-0"
                     )}
                   >
