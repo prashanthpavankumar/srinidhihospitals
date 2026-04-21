@@ -115,7 +115,7 @@ export function FocusRail({
   return (
     <div
       className={cn(
-        "group relative flex h-[700px] w-full flex-col overflow-hidden bg-white text-neutral-900 outline-none select-none overflow-x-hidden",
+        "group relative flex h-[700px] w-full flex-col overflow-hidden bg-white text-neutral-900 outline-none select-none overflow-x-hidden touch-pan-y",
         className
       )}
       onMouseEnter={() => setIsHovering(true)}
@@ -148,6 +148,7 @@ export function FocusRail({
         <motion.div
           className="relative mx-auto flex h-[400px] w-full max-w-6xl items-center justify-center perspective-[1200px]"
           drag="x"
+          dragDirectionLock
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.2}
           onDragEnd={onDragEnd}
@@ -185,7 +186,7 @@ export function FocusRail({
                   scale: scale,
                   rotateY: rotateY,
                   opacity: opacity,
-                  filter: `blur(${blur}px) brightness(${brightness})`,
+                  filter: `brightness(${brightness})`,
                 }}
                 transition={BASE_SPRING}
                 style={{

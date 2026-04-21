@@ -55,7 +55,7 @@ const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
             "border border-white/40",
             styles.base,
             isLight ? "group-hover:[box-shadow:rgba(0,0,0,0.1)_20px_40px_30px_-30px,rgba(0,0,0,0.05)_0px_20px_20px_0px]" : "group-hover:[box-shadow:rgba(0,0,0,0.4)_30px_50px_25px_-40px,rgba(0,0,0,0.1)_0px_25px_30px_0px]",
-            "group-hover:[transform:rotate3d(1,1,0,15deg)]" // reduced tilt for readability
+            "group-hover:md:[transform:rotate3d(1,1,0,15deg)]"
         )}>
           
           {/* Glass Layer */}

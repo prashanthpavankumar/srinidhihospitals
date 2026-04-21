@@ -129,7 +129,7 @@ export function FeatureCarousel() {
         </p>
       </div>
 
-      <div className="relative overflow-hidden rounded-[2.5rem] lg:rounded-[4rem] flex flex-col lg:flex-row min-h-[600px] lg:aspect-video border border-border/40 shadow-2xl bg-white mx-4 lg:mx-0">
+      <div className="relative overflow-hidden rounded-[2.5rem] lg:rounded-[4rem] flex flex-col lg:flex-row min-h-[600px] lg:aspect-video border border-border/40 shadow-2xl bg-white mx-4 lg:mx-0 touch-pan-y">
         <div className="w-full lg:w-[40%] min-h-[400px] lg:h-full relative z-30 flex flex-col items-start justify-center overflow-hidden px-8 md:px-16 lg:pl-16 bg-[#162C6D] ">
           <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#162C6D] via-[#162C6D]/80 to-transparent z-40" />
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#162C6D] via-[#162C6D]/80 to-transparent z-40" />
@@ -231,8 +231,8 @@ export function FeatureCarousel() {
                     className={cn(
                       "w-full h-full object-cover transition-all duration-1000",
                       isActive
-                        ? "grayscale-0 blur-0 scale-105"
-                        : "grayscale blur-[2px] brightness-75"
+                        ? "grayscale-0 scale-105"
+                        : "grayscale brightness-75"
                     )}
                   />
 
