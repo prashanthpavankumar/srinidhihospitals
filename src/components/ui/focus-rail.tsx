@@ -110,7 +110,13 @@ export function FocusRail({
     }
   };
 
-  const visibleIndices = [-2, -1, 0, 1, 2];
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
+  const visibleIndices = isMobile ? [-1, 0, 1] : [-2, -1, 0, 1, 2];
 
   return (
     <div
@@ -137,7 +143,7 @@ export function FocusRail({
             <img
               src={activeItem.imageSrc}
               alt=""
-              className="h-full w-full object-cover blur-[100px] saturate-150"
+              className="h-full w-full object-cover blur-[40px] opacity-20 saturate-150"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent" />
           </motion.div>
@@ -190,6 +196,7 @@ export function FocusRail({
                 transition={BASE_SPRING}
                 style={{
                   transformStyle: "preserve-3d",
+                  willChange: "transform, opacity",
                 }}
                 onClick={() => {
                   if (offset !== 0) setActive((p) => p + offset);
@@ -198,7 +205,7 @@ export function FocusRail({
                 <GlowCard 
                    glowColor={item.glowColor || 'blue'}
                    customSize 
-                   className="w-full h-full border-white/50 bg-white/40 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)]"
+                   className="w-full h-full border-white/50 bg-white/40 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] backdrop-blur-none"
                 >
                     <div className="absolute inset-0 rounded-2xl overflow-hidden">
                         <img
