@@ -41,11 +41,12 @@ export function CinematicHero({
     const isMobile = window.innerWidth < 768;
 
     const ctx = gsap.context(() => {
-      // Simple fade-in intro
       gsap.set(".hero-tagline", { opacity: 0, y: 40 });
-      gsap.set(".hero-card", { y: "100vh", opacity: 1 });
-      gsap.set([".card-content", ".card-phone", ".card-badge"], { opacity: 0 });
-      gsap.set(".hero-cta", { opacity: 0 });
+      gsap.set(".hero-card", { y: "100vh", scale: 1, opacity: 1 });
+      gsap.set(".card-content", { opacity: 0, y: 30 });
+      gsap.set(".card-phone", { opacity: 0, y: 60, scale: 0.9 });
+      gsap.set(".card-badge", { opacity: 0, y: 40, scale: 0.8 });
+      gsap.set(".hero-cta", { opacity: 0, scale: 0.9 });
 
       // Intro animation
       gsap.to(".hero-tagline", {
@@ -67,24 +68,24 @@ export function CinematicHero({
       });
 
       scrollTl
-        // Fade out hero text
-        .to(".hero-tagline-wrapper", { opacity: 0, y: -60, duration: 1 }, 0)
-        // Bring card up
-        .to(".hero-card", { y: 0, duration: 1.5, ease: "power2.out" }, 0)
-        // Show card content
-        .to(".card-content", { opacity: 1, duration: 1 }, 0.8)
-        .to(".card-phone", { opacity: 1, y: 0, duration: 1 }, 1.0)
-        .to(".card-badge", { opacity: 1, duration: 0.8, stagger: 0.1 }, 1.2)
-        // Hold
-        .to({}, { duration: 0.8 })
-        // Fade out card content
-        .to([".card-content", ".card-phone", ".card-badge"], { opacity: 0, duration: 0.6 })
-        // Show CTA
-        .to(".hero-cta", { opacity: 1, duration: 0.8 })
-        // Hold CTA
-        .to({}, { duration: 0.5 })
-        // Slide card up and out
-        .to(".hero-card", { y: "-110vh", duration: 1.2, ease: "power2.in" });
+        // Phase 1: Fade out text, bring card from below
+        .to(".hero-tagline-wrapper", { opacity: 0, y: -80, scale: 1.1, duration: 1.5 }, 0)
+        .to(".hero-card", { y: 0, duration: 2, ease: "power3.inOut" }, 0)
+        // Phase 2: Scale card to fill, reveal content inside with stagger
+        .to(".hero-card", { scale: 1.15, duration: 1.5, ease: "power2.inOut" })
+        .to(".card-content", { opacity: 1, y: 0, duration: 1, stagger: 0.15 }, "-=1.0")
+        .to(".card-phone", { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: "back.out(1.4)" }, "-=0.8")
+        .to(".card-badge", { opacity: 1, y: 0, scale: 1, duration: 0.8, stagger: 0.15, ease: "back.out(1.2)" }, "-=0.6")
+        // Phase 3: Hold for viewing
+        .to({}, { duration: 1.0 })
+        // Phase 4: Fade internal content, shrink card back, show CTA
+        .to([".card-content", ".card-phone", ".card-badge"], { opacity: 0, scale: 0.95, duration: 0.8 })
+        .to(".hero-card", { scale: 0.92, duration: 1.0, ease: "power2.inOut" }, "-=0.4")
+        .to(".hero-cta", { opacity: 1, scale: 1, duration: 1.0 }, "-=0.6")
+        // Phase 5: Hold CTA
+        .to({}, { duration: 0.6 })
+        // Phase 6: Card flies out
+        .to(".hero-card", { y: "-120vh", scale: 0.8, duration: 1.5, ease: "power3.in" });
 
     }, containerRef);
 

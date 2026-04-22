@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   StethoscopeIcon,
   BoneIcon,
@@ -81,6 +82,10 @@ const wrap = (min: number, max: number, v: number) => {
   return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
 };
 
+// Smooth tween — no spring physics overhead
+const CHIP_TRANSITION = { type: "tween" as const, duration: 0.4, ease: "easeInOut" as const };
+const CARD_TRANSITION = { type: "tween" as const, duration: 0.5, ease: "easeInOut" as const };
+
 export function FeatureCarousel() {
   const [step, setStep] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -106,11 +111,9 @@ export function FeatureCarousel() {
   const getCardStatus = (index: number) => {
     const diff = index - currentIndex;
     const len = FEATURES.length;
-
     let normalizedDiff = diff;
     if (diff > len / 2) normalizedDiff -= len;
     if (diff < -len / 2) normalizedDiff += len;
-
     if (normalizedDiff === 0) return "active";
     if (normalizedDiff === -1) return "prev";
     if (normalizedDiff === 1) return "next";
@@ -129,7 +132,7 @@ export function FeatureCarousel() {
       </div>
 
       <div className="relative overflow-hidden rounded-[2.5rem] lg:rounded-[4rem] flex flex-col lg:flex-row min-h-[600px] lg:aspect-video border border-border/40 shadow-2xl bg-white mx-4 lg:mx-0 touch-pan-y">
-        {/* Left panel: specialty list */}
+        {/* Left panel: animated chip list */}
         <div className="w-full lg:w-[40%] min-h-[400px] lg:h-full relative z-30 flex flex-col items-start justify-center overflow-hidden px-8 md:px-16 lg:pl-16 bg-[#162C6D]">
           <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#162C6D] via-[#162C6D]/80 to-transparent z-40" />
           <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#162C6D] via-[#162C6D]/80 to-transparent z-40" />
@@ -144,52 +147,42 @@ export function FeatureCarousel() {
               );
 
               return (
-                <div
+                <motion.div
                   key={feature.id}
-                  className="absolute flex items-center justify-start"
-                  style={{
-                    height: ITEM_HEIGHT,
-                    width: "fit-content",
-                    transform: `translateY(${wrappedDistance * ITEM_HEIGHT}px) scale(${isActive ? 1 : 0.9})`,
+                  style={{ height: ITEM_HEIGHT, width: "fit-content", willChange: "transform, opacity" }}
+                  animate={{
+                    y: wrappedDistance * ITEM_HEIGHT,
                     opacity: 1 - Math.abs(wrappedDistance) * 0.25,
-                    transition: "transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease",
+                    scale: isActive ? 1 : 0.9,
                   }}
+                  transition={CHIP_TRANSITION}
+                  className="absolute flex items-center justify-start"
                 >
                   <button
                     onClick={() => handleChipClick(index)}
                     onMouseEnter={() => setIsPaused(true)}
                     onMouseLeave={() => setIsPaused(false)}
                     className={cn(
-                      "relative flex items-center gap-4 px-6 md:px-10 lg:px-8 py-3.5 md:py-5 lg:py-4 rounded-full text-left border transition-colors duration-300",
+                      "relative flex items-center gap-4 px-6 md:px-10 lg:px-8 py-3.5 md:py-5 lg:py-4 rounded-full text-left group border transition-colors duration-300",
                       isActive
                         ? "bg-white text-[#162C6D] border-white z-10 shadow-xl"
                         : "bg-transparent text-white/60 border-white/20 hover:border-white/40 hover:text-white"
                     )}
                   >
-                    <div
-                      className={cn(
-                        "flex items-center justify-center",
-                        isActive ? "text-[#162C6D]" : "text-white/40"
-                      )}
-                    >
-                      <HugeiconsIcon
-                        icon={feature.icon}
-                        size={18}
-                        strokeWidth={2}
-                      />
+                    <div className={cn("flex items-center justify-center", isActive ? "text-[#162C6D]" : "text-white/40")}>
+                      <HugeiconsIcon icon={feature.icon} size={18} strokeWidth={2} />
                     </div>
-
                     <span className="font-bold text-sm md:text-[15px] tracking-tight whitespace-nowrap uppercase">
                       {feature.label}
                     </span>
                   </button>
-                </div>
+                </motion.div>
               );
             })}
           </div>
         </div>
 
-        {/* Right panel: image cards */}
+        {/* Right panel: animated image cards */}
         <div className="flex-1 min-h-[500px] lg:h-full relative bg-neutral-50 flex items-center justify-center py-16 px-6 md:px-12 lg:px-10 overflow-hidden border-t lg:border-t-0 lg:border-l border-border/20">
           <div className="relative w-full max-w-[420px] aspect-[4/5] flex items-center justify-center">
             {FEATURES.map((feature, index) => {
@@ -199,22 +192,19 @@ export function FeatureCarousel() {
               const isNext = status === "next";
 
               return (
-                <div
+                <motion.div
                   key={feature.id}
-                  className="absolute inset-0 rounded-[2.5rem] overflow-hidden border-4 md:border-[12px] border-white bg-white origin-center shadow-2xl"
-                  style={{
-                    transform: isActive
-                      ? "translateX(0) scale(1) rotate(0deg)"
-                      : isPrev
-                      ? "translateX(-100px) scale(0.85) rotate(-5deg)"
-                      : isNext
-                      ? "translateX(100px) scale(0.85) rotate(5deg)"
-                      : "scale(0.7)",
+                  initial={false}
+                  animate={{
+                    x: isActive ? 0 : isPrev ? -100 : isNext ? 100 : 0,
+                    scale: isActive ? 1 : isPrev || isNext ? 0.85 : 0.7,
                     opacity: isActive ? 1 : isPrev || isNext ? 0.4 : 0,
+                    rotate: isPrev ? -5 : isNext ? 5 : 0,
                     zIndex: isActive ? 20 : isPrev || isNext ? 10 : 0,
-                    pointerEvents: isActive ? "auto" : "none",
-                    transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease",
                   }}
+                  transition={CARD_TRANSITION}
+                  style={{ willChange: "transform, opacity", pointerEvents: isActive ? "auto" : "none" }}
+                  className="absolute inset-0 rounded-[2.5rem] overflow-hidden border-4 md:border-[12px] border-white bg-white origin-center shadow-2xl"
                 >
                   <img
                     src={feature.image}
@@ -226,19 +216,27 @@ export function FeatureCarousel() {
                     loading="lazy"
                   />
 
-                  {isActive && (
-                    <div className="absolute inset-x-0 bottom-0 p-8 pb-12 pt-32 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end pointer-events-none">
-                      <div className="bg-white text-[#162C6D] px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] w-fit shadow-lg mb-4">
-                        Speciality {index + 1}
-                      </div>
-                      <h3 className="text-white font-bold text-2xl md:text-3xl leading-tight tracking-tight mb-2">
-                        {feature.label}
-                      </h3>
-                      <p className="text-white/80 font-normal text-sm md:text-base leading-relaxed tracking-wide italic">
-                        {feature.description}
-                      </p>
-                    </div>
-                  )}
+                  <AnimatePresence mode="wait">
+                    {isActive && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.3, delay: 0.15 }}
+                        className="absolute inset-x-0 bottom-0 p-8 pb-12 pt-32 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end pointer-events-none"
+                      >
+                        <div className="bg-white text-[#162C6D] px-4 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] w-fit shadow-lg mb-4">
+                          Speciality {index + 1}
+                        </div>
+                        <h3 className="text-white font-bold text-2xl md:text-3xl leading-tight tracking-tight mb-2">
+                          {feature.label}
+                        </h3>
+                        <p className="text-white/80 font-normal text-sm md:text-base leading-relaxed tracking-wide italic">
+                          {feature.description}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   {isActive && (
                     <div className="absolute top-8 left-8 flex items-center gap-3 bg-black/50 px-4 py-2 rounded-full border border-white/20">
@@ -248,7 +246,7 @@ export function FeatureCarousel() {
                       </span>
                     </div>
                   )}
-                </div>
+                </motion.div>
               );
             })}
           </div>

@@ -47,20 +47,23 @@ const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
     return (
       <div
         ref={ref}
-        className={cn("group h-[340px] w-full max-w-[340px] cursor-pointer mx-auto touch-pan-y", className)}
+        className={cn("group h-[340px] w-full max-w-[340px] [perspective:1200px] cursor-pointer mx-auto touch-pan-y", className)}
         {...props}
       >
+        {/* 3D tilt on hover — desktop only via @media(hover:hover) handled by group-hover + md: */}
         <div className={cn(
-            "relative h-full rounded-[45px] bg-gradient-to-br shadow-2xl transition-shadow duration-300",
+            "relative h-full rounded-[45px] bg-gradient-to-br shadow-2xl",
             "border border-white/40",
+            "transition-transform duration-500 ease-out",
             styles.base,
             isLight 
-              ? "hover:shadow-[rgba(0,0,0,0.1)_20px_40px_30px_-30px,rgba(0,0,0,0.05)_0px_20px_20px_0px]" 
-              : "hover:shadow-[rgba(0,0,0,0.4)_30px_50px_25px_-40px,rgba(0,0,0,0.1)_0px_25px_30px_0px]",
+              ? "md:group-hover:shadow-[rgba(0,0,0,0.1)_20px_40px_30px_-30px]" 
+              : "md:group-hover:shadow-[rgba(0,0,0,0.4)_30px_50px_25px_-40px]",
+            "md:group-hover:[transform:rotate3d(1,1,0,12deg)]"
         )}>
           
-          {/* Content Layer — no 3D transforms */}
-          <div className="absolute inset-0 flex flex-col justify-end p-8 pb-12">
+          {/* Content */}
+          <div className="absolute inset-0 flex flex-col justify-end p-8 pb-12 z-10">
             <div className="space-y-4">
               <span className={cn("block text-2xl font-black leading-tight tracking-tight", styles.text)}>
                 {title}
@@ -73,26 +76,24 @@ const GlassCard = React.forwardRef<HTMLDivElement, GlassCardProps>(
             <div className="mt-10 flex items-center justify-between pointer-events-none">
               <div className="flex gap-2.5">
                 {[...Array(3)].map((_, i) => (
-                  <div
-                    key={i}
-                    className={cn("w-1.5 h-1.5 rounded-full", styles.circle)}
-                  />
+                  <div key={i} className={cn("w-1.5 h-1.5 rounded-full", styles.circle)} />
                 ))}
               </div>
-              <div className={cn("flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.2em]", styles.meta, "group-hover:text-primary transition-colors duration-200")}>
+              <div className={cn("flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.2em] transition-colors duration-200", styles.meta, "group-hover:text-primary")}>
                 <span>CORE FACILITY</span>
                 <ChevronRight className="w-3 h-3 translate-y-[0.5px]" />
               </div>
             </div>
           </div>
 
-          {/* Icon — no 3D transforms */}
-          <div className="absolute top-0 right-0 pointer-events-none">
+          {/* Icon */}
+          <div className="absolute top-0 right-0 pointer-events-none z-20">
             <div
               className={cn(
-                "absolute grid aspect-square w-16 place-content-center rounded-2xl shadow-xl",
+                "absolute grid aspect-square w-16 place-content-center rounded-2xl shadow-xl transition-transform duration-500",
                 styles.iconBg,
-                isLight ? "border border-primary/10 shadow-primary/5" : "shadow-black/20"
+                isLight ? "border border-primary/10 shadow-primary/5" : "shadow-black/20",
+                "md:group-hover:translate-y-[-4px]"
               )}
               style={{ top: "45px", right: "45px" }}
             >
