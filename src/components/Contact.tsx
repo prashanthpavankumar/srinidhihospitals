@@ -7,7 +7,7 @@ export function Contact() {
         <div className="grid lg:grid-cols-2">
           {/* Left Side: Info */}
           <div className="bg-neutral-900 p-10 md:p-16 text-white relative">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full blur-[120px] opacity-20" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary rounded-full opacity-10" />
             
             <div className="relative z-10">
               <h2 className="text-4xl font-bold mb-10 tracking-tight leading-tight">
@@ -95,11 +95,15 @@ export function Contact() {
                 <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 ml-1">Department</label>
                 <select className="w-full bg-neutral-50 border border-neutral-100 rounded-2xl p-4 focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all outline-none appearance-none">
                   <option>Select Department</option>
-                  <option>Emergency & Trauma</option>
                   <option>General Medicine</option>
+                  <option>General Surgery</option>
                   <option>Orthopedics</option>
-                  <option>Cardiology</option>
-                  <option>Obstetrics & Gynecology</option>
+                  <option>Neurosurgery</option>
+                  <option>Gastroenterology</option>
+                  <option>Pulmonology</option>
+                  <option>Obstetrics & Gynaecology</option>
+                  <option>Paediatrics & Neonatology</option>
+                  <option>Emergency & Critical Care</option>
                 </select>
               </div>
 

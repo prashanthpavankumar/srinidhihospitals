@@ -19,7 +19,7 @@ export function Footer() {
             </div>
           </div>
           <p className="text-white/50 leading-relaxed italic text-sm">
-            Caring for you, every day. <br /> Trusted multi-specialty healthcare with compassion and absolute excellence.
+            Compassionate healthcare in Amalapuram. <br /> Trusted multi-specialty hospital serving the community with excellence.
           </p>
           <div className="flex gap-4">
             <a href="#" className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-primary transition-colors hover:scale-110 duration-300">
@@ -56,7 +56,7 @@ export function Footer() {
         <div>
           <h4 className="text-lg font-bold mb-8 italic text-[#0077B6]">Specialties</h4>
           <ul className="space-y-4">
-            {["General Medicine", "Orthopedics", "Cardiology", "Neurology", "Pediatrics"].map((item, i) => (
+            {["General Medicine", "General Surgery", "Orthopedics", "Neurosurgery", "Pulmonology"].map((item, i) => (
               <li key={i}>
                 <a href="#services" className="text-white/50 hover:text-white transition-colors flex items-center gap-2 group">
                   <div className="w-1.5 h-1.5 bg-blue-400 rounded-full scale-0 group-hover:scale-100 transition-transform" />
@@ -81,7 +81,7 @@ export function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 relative z-10 text-[11px] font-bold tracking-widest uppercase opacity-40">
-        <p>© 2025 Srinidhi Hospitals. All rights reserved.</p>
+        <p>© 2026 Srinidhi Hospitals, Amalapuram. All rights reserved.</p>
         <div className="flex gap-8">
           <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
           <a href="#" className="hover:text-white transition-colors">Terms of Service</a>

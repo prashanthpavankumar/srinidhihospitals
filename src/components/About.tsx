@@ -1,4 +1,4 @@
-import { Target, Eye, ShieldCheck } from "lucide-react";
+import { Target, Eye, ShieldCheck, Heart, Lightbulb } from "lucide-react";
 
 export function About() {
   return (
@@ -11,14 +11,14 @@ export function About() {
             <span className="text-primary font-bold tracking-widest text-sm uppercase">About Us</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-8 leading-tight">
-            Caring for you, every day with Excellence.
+            Compassionate Care, <br/>Advanced Medicine.
           </h2>
           <div className="space-y-6 text-lg text-neutral-600 leading-relaxed">
             <p>
-              Srinidhi Hospitals is a patient-centric, multi-specialty hospital serving families across Pithapuram and the Kakinada region. Our goal is simple: deliver timely, accurate, and affordable care with empathy.
+              Srinidhi Hospitals, Amalapuram is a trusted name in healthcare, committed to delivering high-quality, compassionate, and patient-centered medical services. Established with a vision to provide advanced healthcare facilities to the people of Amalapuram and surrounding regions, we combine modern medical technology with experienced clinical expertise.
             </p>
             <p>
-              From emergencies to routine checkups, we combine skilled specialists with modern infrastructure to ensure you receive the right treatment at the right time.
+              We are equipped with state-of-the-art infrastructure, advanced diagnostic facilities, and well-maintained inpatient and outpatient services. From routine consultations to emergency care, our hospital is designed to meet a wide range of medical needs under one roof.
             </p>
           </div>
           
@@ -27,30 +27,46 @@ export function About() {
                 <ShieldCheck size={32} />
              </div>
              <div>
-                <h4 className="font-bold text-neutral-900">Certified Excellence</h4>
-                <p className="text-sm text-neutral-500">Quality care that's accessible and ethical.</p>
+                <h4 className="font-bold text-neutral-900">Patient First, Always</h4>
+                <p className="text-sm text-neutral-500">Every decision centered around patient care, safety, and trust.</p>
              </div>
           </div>
         </div>
 
-        {/* Right Side: Mission/Vision Cards */}
+        {/* Right Side: Mission/Vision/Values */}
         <div className="grid gap-6">
-          <div className="premium-card p-10 bg-primary text-white rounded-[2.5rem] shadow-2xl shadow-primary/20 relative overflow-hidden group">
-            <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/10 rounded-full" />
+          <div className="p-10 bg-primary text-white rounded-[2.5rem] shadow-2xl shadow-primary/20 relative overflow-hidden">
             <Target className="mb-6 opacity-80" size={48} />
             <h3 className="text-2xl font-bold mb-4 italic">Our Mission</h3>
             <p className="text-primary-foreground/90 text-lg leading-relaxed">
-              Quality care that's accessible, ethical, and delivered with dignity. We strive to be the standard-setter in healthcare.
+              To provide accessible, affordable, and quality healthcare services with compassion and integrity, ensuring the well-being of every patient we serve.
             </p>
           </div>
 
-          <div className="premium-card p-10 bg-neutral-900 text-white rounded-[2.5rem] shadow-2xl shadow-black/10 relative overflow-hidden group">
-            <div className="absolute bottom-[-20%] left-[-10%] w-64 h-64 bg-white/10 rounded-full" />
+          <div className="p-10 bg-neutral-900 text-white rounded-[2.5rem] shadow-2xl shadow-black/10 relative overflow-hidden">
             <Eye className="mb-6 opacity-80" size={48} />
             <h3 className="text-2xl font-bold mb-4 italic">Our Vision</h3>
             <p className="text-white/70 text-lg leading-relaxed">
-              To be the most trusted healthcare destination in Pithapuram, recognized for medical excellence and compassionate patient experience.
+              To be a leading healthcare institution in the region, recognized for excellence in medical care, patient satisfaction, and continuous innovation.
             </p>
+          </div>
+
+          {/* Core Values */}
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              { icon: Heart, label: "Compassion", desc: "Empathy & respect" },
+              { icon: ShieldCheck, label: "Integrity", desc: "Ethical practices" },
+              { icon: Lightbulb, label: "Innovation", desc: "Modern techniques" },
+              { icon: Target, label: "Quality", desc: "Clinical excellence" },
+            ].map((v, i) => (
+              <div key={i} className="p-5 bg-neutral-50 border border-neutral-100 rounded-2xl flex items-center gap-4">
+                <v.icon className="w-6 h-6 text-primary flex-shrink-0" />
+                <div>
+                  <span className="font-bold text-neutral-900 text-sm block">{v.label}</span>
+                  <span className="text-neutral-500 text-xs">{v.desc}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

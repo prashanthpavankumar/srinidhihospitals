@@ -10,165 +10,10 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const INJECTED_STYLES = `
-  .gsap-reveal { visibility: hidden; }
-
-  /* Environment Overlays */
-  .film-grain {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 50; opacity: 0.05; mix-blend-mode: overlay;
-      background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
-  }
-
-  .bg-grid-theme {
-      background-size: 60px 60px;
-      background-image: 
-          linear-gradient(to right, color-mix(in srgb, var(--color-foreground) 5%, transparent) 1px, transparent 1px),
-          linear-gradient(to bottom, color-mix(in srgb, var(--color-foreground) 5%, transparent) 1px, transparent 1px);
-      mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
-      -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
-  }
-
-  /* -------------------------------------------------------------------
-     PHYSICAL SKEUOMORPHIC MATERIALS (Restored 3D Depth)
-  ---------------------------------------------------------------------- */
-  
-  /* OUTSIDE THE CARD: Theme-aware text (Shadow in Light Mode, Glow in Dark Mode) */
-  .text-3d-matte {
-      color: var(--color-foreground);
-      text-shadow: 
-          0 10px 30px color-mix(in srgb, var(--color-foreground) 20%, transparent), 
-          0 2px 4px color-mix(in srgb, var(--color-foreground) 10%, transparent);
-  }
-
-  .text-silver-matte {
-      background: linear-gradient(180deg, var(--color-foreground) 0%, color-mix(in srgb, var(--color-foreground) 40%, transparent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      transform: translateZ(0); /* Hardware acceleration to prevent WebKit clipping bug */
-      filter: 
-          drop-shadow(0px 10px 20px color-mix(in srgb, var(--color-foreground) 15%, transparent)) 
-          drop-shadow(0px 2px 4px color-mix(in srgb, var(--color-foreground) 10%, transparent));
-  }
-
-  /* INSIDE THE CARD: Hardcoded Silver/White for the dark background, deep rich shadows */
-  .text-card-silver-matte {
-      background: linear-gradient(180deg, #FFFFFF 0%, #A1A1AA 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      transform: translateZ(0);
-      filter: 
-          drop-shadow(0px 12px 24px rgba(0,0,0,0.8)) 
-          drop-shadow(0px 4px 8px rgba(0,0,0,0.6));
-  }
-
-  /* Deep Physical Card with Dynamic Mouse Lighting */
-  .premium-depth-card {
-      background: linear-gradient(145deg, #162C6D 0%, #0A101D 100%);
-      box-shadow: 
-          0 40px 100px -20px rgba(0, 0, 0, 0.9),
-          0 20px 40px -20px rgba(0, 0, 0, 0.8),
-          inset 0 1px 2px rgba(255, 255, 255, 0.2),
-          inset 0 -2px 4px rgba(0, 0, 0, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      position: relative;
-  }
-
-  .card-sheen {
-      display: none;
-  }
-
-  /* Realistic iPhone Mockup Hardware */
-  .iphone-bezel {
-      background-color: #111;
-      box-shadow: 
-          inset 0 0 0 2px #52525B, 
-          inset 0 0 0 7px #000, 
-          0 40px 80px -15px rgba(0,0,0,0.9),
-          0 15px 25px -5px rgba(0,0,0,0.7);
-      transform-style: preserve-3d;
-  }
-
-  .hardware-btn {
-      background: linear-gradient(90deg, #404040 0%, #171717 100%);
-      box-shadow: 
-          -2px 0 5px rgba(0,0,0,0.8),
-          inset -1px 0 1px rgba(255,255,255,0.15),
-          inset 1px 0 2px rgba(0,0,0,0.8);
-      border-left: 1px solid rgba(255,255,255,0.05);
-  }
-  
-  .screen-glare {
-      background: linear-gradient(110deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 45%);
-  }
-
-  .widget-depth {
-      background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
-      box-shadow: 
-          0 10px 20px rgba(0,0,0,0.3),
-          inset 0 1px 1px rgba(255,255,255,0.05),
-          inset 0 -1px 1px rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.03);
-  }
-
-  .floating-ui-badge {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
-      box-shadow: 
-          0 0 0 1px rgba(255, 255, 255, 0.1),
-          0 25px 50px -12px rgba(0, 0, 0, 0.8);
-  }
-
-  /* Physical Tactile Buttons */
-  .btn-modern-light, .btn-modern-dark {
-      transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-  }
-  .btn-modern-light {
-      background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
-      color: #0F172A;
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.1), 0 12px 24px -4px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,1), inset 0 -3px 6px rgba(0,0,0,0.06);
-  }
-  .btn-modern-light:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.05), 0 6px 12px -2px rgba(0,0,0,0.15), 0 20px 32px -6px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,1), inset 0 -3px 6px rgba(0,0,0,0.06);
-  }
-  .btn-modern-light:active {
-      transform: translateY(1px);
-      background: linear-gradient(180deg, #F1F5F9 0%, #E2E8F0 100%);
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.1), inset 0 3px 6px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(0,0,0,0.02);
-  }
-  .btn-modern-dark {
-      background: linear-gradient(180deg, #27272A 0%, #18181B 100%);
-      color: #FFFFFF;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 2px 4px rgba(0,0,0,0.6), 0 12px 24px -4px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -3px 6px rgba(0,0,0,0.8);
-  }
-  .btn-modern-dark:hover {
-      transform: translateY(-3px);
-      background: linear-gradient(180deg, #3F3F46 0%, #27272A 100%);
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.15), 0 6px 12px -2px rgba(0,0,0,0.7), 0 20px 32px -6px rgba(0,0,0,1), inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -3px 6px rgba(0,0,0,0.8);
-  }
-  .btn-modern-dark:active {
-      transform: translateY(1px);
-      background: #18181B;
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.05), inset 0 3px 8px rgba(0,0,0,0.9), inset 0 0 0 1px rgba(0,0,0,0.5);
-  }
-
-  .progress-ring {
-      transform: rotate(-90deg);
-      transform-origin: center;
-      stroke-dasharray: 402;
-      stroke-dashoffset: 402;
-      stroke-linecap: round;
-  }
-`;
-
 export interface CinematicHeroProps extends React.HTMLAttributes<HTMLDivElement> {
   brandName?: string;
   tagline1?: string;
   tagline2?: string;
-  cardHeading?: string;
-  cardDescription?: React.ReactNode;
   ctaHeading?: string;
   ctaDescription?: string;
 }
@@ -176,104 +21,70 @@ export interface CinematicHeroProps extends React.HTMLAttributes<HTMLDivElement>
 const QUICK_FACTS = [
   { title: "24x7 Emergency", desc: "Round-the-clock Care", icon: Clock, color: "text-red-400" },
   { title: "Multi-specialty", desc: "Expert Specialists", icon: Users, color: "text-blue-400" },
-  { title: "In-house Diagnostics", desc: "Complete On-site Care", icon: Activity, color: "text-orange-400" },
-  { title: "Transparent Care", desc: "Patient-first Ethics", icon: ShieldCheck, color: "text-emerald-400" },
+  { title: "In-house Diagnostics", desc: "Lab, X-Ray, CT, USG", icon: Activity, color: "text-orange-400" },
+  { title: "Patient First", desc: "Compassion & Integrity", icon: ShieldCheck, color: "text-emerald-400" },
 ];
 
 export function CinematicHero({
-  brandName = "Srindhi Hospital",
+  brandName = "Srinidhi Hospitals",
   tagline1 = "Where Your Health,",
   tagline2 = "Is Our Priority.",
-  cardHeading = "Transforming Medical Care.",
-  cardDescription = <><span className="text-white font-semibold">Srinidhi Hospitals</span> combines compassionate care with state-of-the-art medical technology to provide world-class healthcare in Amalapuram.</>,
   ctaHeading = "Trust Excellence.",
-  ctaDescription = "Join thousands of families who trust Srinidhi Hospitals for their healthcare needs today.",
+  ctaDescription = "Join thousands of families who trust Srinidhi Hospitals for comprehensive healthcare in Amalapuram.",
   className,
   ...props
 }: CinematicHeroProps) {
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const mainCardRef = useRef<HTMLDivElement>(null);
-  const mockupRef = useRef<HTMLDivElement>(null);
-  const requestRef = useRef<number>(0);
 
-  // 1. Mouse Interaction – desktop only
-  useEffect(() => {
-    if (window.innerWidth < 768) return; // Skip on mobile entirely
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (window.scrollY > window.innerHeight * 2) return;
-      cancelAnimationFrame(requestRef.current);
-      requestRef.current = requestAnimationFrame(() => {
-        if (mainCardRef.current && mockupRef.current) {
-          const rect = mainCardRef.current.getBoundingClientRect();
-          mainCardRef.current.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
-          mainCardRef.current.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
-          const xVal = (e.clientX / window.innerWidth - 0.5) * 2;
-          const yVal = (e.clientY / window.innerHeight - 0.5) * 2;
-          gsap.to(mockupRef.current, { rotationY: xVal * 8, rotationX: -yVal * 8, ease: "power2.out", duration: 1.0 });
-        }
-      });
-    };
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => { window.removeEventListener("mousemove", handleMouseMove); cancelAnimationFrame(requestRef.current); };
-  }, []);
-
-  // 2. Complex Cinematic Scroll Timeline
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
 
     const ctx = gsap.context(() => {
-      gsap.set(".text-track", { autoAlpha: 0, y: 60, scale: 0.85, rotationX: -20 });
-      gsap.set(".text-days", { autoAlpha: 1, clipPath: "inset(0 100% 0 0)" });
-      gsap.set(".main-card", { y: window.innerHeight + 200, autoAlpha: 1 });
-      gsap.set([".card-left-text", ".card-right-text", ".mockup-scroll-wrapper", ".floating-badge", ".phone-widget"], { autoAlpha: 0 });
-      gsap.set(".cta-wrapper", { autoAlpha: 0, scale: 0.8 });
+      // Simple fade-in intro
+      gsap.set(".hero-tagline", { opacity: 0, y: 40 });
+      gsap.set(".hero-card", { y: "100vh", opacity: 1 });
+      gsap.set([".card-content", ".card-phone", ".card-badge"], { opacity: 0 });
+      gsap.set(".hero-cta", { opacity: 0 });
 
-      const introTl = gsap.timeline({ delay: 0.3 });
-      introTl
-        .to(".text-track", { duration: 1.8, autoAlpha: 1, y: 0, scale: 1, rotationX: 0, ease: "expo.out" })
-        .to(".text-days", { duration: 1.4, clipPath: "inset(0 0% 0 0)", ease: "power4.inOut" }, "-=1.0");
+      // Intro animation
+      gsap.to(".hero-tagline", {
+        opacity: 1, y: 0,
+        duration: 1.2, ease: "power3.out", delay: 0.3,
+        stagger: 0.2,
+      });
 
+      // Scroll timeline — ONLY animate transform & opacity (GPU-friendly)
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: isMobile ? "+=1200" : "+=2500",
+          end: isMobile ? "+=800" : "+=1500",
           pin: true,
-          scrub: 1,
+          scrub: 0.5,
           anticipatePin: 1,
         },
       });
 
       scrollTl
-        .to([".hero-text-wrapper", ".bg-grid-theme"], { scale: 1.05, opacity: 0.2, ease: "power2.inOut", duration: 2 }, 0)
-        .to(".main-card", { y: 0, ease: "power3.inOut", duration: 2 }, 0)
-        .to(".main-card", { width: "100%", height: "100%", borderRadius: "0px", ease: "power3.inOut", duration: 1.5 })
-        .fromTo(".mockup-scroll-wrapper",
-          { y: 200, autoAlpha: 0, scale: 0.8 },
-          { y: 0, autoAlpha: 1, scale: 1, ease: "expo.out", duration: 2 }, "-=0.8"
-        )
-        .fromTo(".phone-widget", { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.1, ease: "power2.out", duration: 1.0 }, "-=1.2")
-        .fromTo(".floating-badge", { y: 60, autoAlpha: 0 }, { y: 0, autoAlpha: 1, ease: "back.out(1.2)", duration: 1.2, stagger: 0.15 }, "-=1.5")
-        .fromTo(".card-left-text", { x: -40, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "power3.out", duration: 1.2 }, "-=1.2")
-        .fromTo(".card-right-text", { x: 40, autoAlpha: 0 }, { x: 0, autoAlpha: 1, ease: "power3.out", duration: 1.2 }, "<")
-        .to({}, { duration: 1.5 })
-        .set(".hero-text-wrapper", { autoAlpha: 0 })
-        .set(".cta-wrapper", { autoAlpha: 1 })
-        .to({}, { duration: 1.0 })
-        .to([".mockup-scroll-wrapper", ".floating-badge", ".card-left-text", ".card-right-text"], {
-          autoAlpha: 0, ease: "power2.in", duration: 1.0,
-        })
-        .to(".main-card", {
-          width: isMobile ? "92vw" : "85vw",
-          height: isMobile ? "92vh" : "85vh",
-          borderRadius: isMobile ? "32px" : "40px",
-          ease: "expo.inOut",
-          duration: 1.5
-        }, "pullback")
-        .to(".cta-wrapper", { scale: 1, ease: "expo.inOut", duration: 1.5 }, "pullback")
-        .to(".main-card", { y: -window.innerHeight - 200, ease: "power3.in", duration: 1.2 });
+        // Fade out hero text
+        .to(".hero-tagline-wrapper", { opacity: 0, y: -60, duration: 1 }, 0)
+        // Bring card up
+        .to(".hero-card", { y: 0, duration: 1.5, ease: "power2.out" }, 0)
+        // Show card content
+        .to(".card-content", { opacity: 1, duration: 1 }, 0.8)
+        .to(".card-phone", { opacity: 1, y: 0, duration: 1 }, 1.0)
+        .to(".card-badge", { opacity: 1, duration: 0.8, stagger: 0.1 }, 1.2)
+        // Hold
+        .to({}, { duration: 0.8 })
+        // Fade out card content
+        .to([".card-content", ".card-phone", ".card-badge"], { opacity: 0, duration: 0.6 })
+        // Show CTA
+        .to(".hero-cta", { opacity: 1, duration: 0.8 })
+        // Hold CTA
+        .to({}, { duration: 0.5 })
+        // Slide card up and out
+        .to(".hero-card", { y: "-110vh", duration: 1.2, ease: "power2.in" });
 
     }, containerRef);
 
@@ -283,109 +94,113 @@ export function CinematicHero({
   return (
     <div
       ref={containerRef}
-      className={cn("relative w-screen h-[100dvh] overflow-hidden flex items-center justify-center bg-background text-foreground font-sans antialiased touch-pan-y", className)}
-      style={{ perspective: "1500px" }}
+      className={cn("relative w-full h-[100dvh] overflow-hidden flex items-center justify-center bg-white touch-pan-y", className)}
       {...props}
     >
-      <style dangerouslySetInnerHTML={{ __html: INJECTED_STYLES }} />
-      <div className="film-grain" aria-hidden="true" />
-      <div className="bg-grid-theme absolute inset-0 z-0 pointer-events-none opacity-50" aria-hidden="true" />
+      {/* Simple grid background */}
+      <div
+        className="absolute inset-0 z-0 pointer-events-none opacity-30"
+        style={{
+          backgroundSize: "60px 60px",
+          backgroundImage: "linear-gradient(to right, #e5e7eb 1px, transparent 1px), linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)",
+          maskImage: "radial-gradient(ellipse at center, black 0%, transparent 70%)",
+          WebkitMaskImage: "radial-gradient(ellipse at center, black 0%, transparent 70%)",
+        }}
+      />
 
-      {/* BACKGROUND LAYER: Hero Texts */}
-      <div className="hero-text-wrapper absolute z-10 flex flex-col items-center justify-center text-center w-screen px-4 will-change-transform transform-style-3d">
-        <h1 className="text-track gsap-reveal text-3d-matte text-[2.5rem] md:text-7xl lg:text-[6rem] font-bold tracking-tight mb-2">
+      {/* Hero text */}
+      <div className="hero-tagline-wrapper absolute z-10 flex flex-col items-center justify-center text-center w-full px-4">
+        <h1 className="hero-tagline text-4xl md:text-7xl lg:text-8xl font-bold tracking-tight text-neutral-900 mb-2">
           {tagline1}
         </h1>
-        <h1 className="text-days gsap-reveal text-silver-matte text-[2.5rem] md:text-7xl lg:text-[6rem] font-extrabold tracking-tighter">
+        <h1 className="hero-tagline text-4xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-neutral-600">
           {tagline2}
         </h1>
       </div>
 
-      {/* BACKGROUND LAYER 2: Tactile CTA Buttons */}
-      <div className="cta-wrapper absolute z-10 flex flex-col items-center justify-center text-center w-screen px-4 gsap-reveal pointer-events-auto will-change-transform">
-        <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-silver-matte">
+      {/* CTA (behind card, shows when card leaves) */}
+      <div className="hero-cta absolute z-10 flex flex-col items-center justify-center text-center w-full px-4 pointer-events-auto">
+        <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight text-neutral-900">
           {ctaHeading}
         </h2>
-        <p className="text-muted-foreground text-lg md:text-xl mb-12 max-w-xl mx-auto font-light leading-relaxed">
+        <p className="text-neutral-500 text-lg md:text-xl mb-10 max-w-xl mx-auto font-light leading-relaxed">
           {ctaDescription}
         </p>
-        <div className="flex flex-col sm:flex-row gap-6">
-          <a href="#contact" aria-label="Book Appointment" className="btn-modern-light flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-            <div className="text-left">
-              <div className="text-[10px] font-bold tracking-wider text-neutral-500 uppercase mb-[-2px]">Experience Care</div>
-              <div className="text-xl font-bold leading-none tracking-tight">Book Appointment</div>
-            </div>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <a
+            href="#contact"
+            className="bg-primary text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+          >
+            Book Appointment
           </a>
-          <a href="https://www.google.com/maps/dir/?api=1&destination=16.573863,82.003086" target="_blank" rel="noopener noreferrer" aria-label="Get Directions" className="btn-modern-dark flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-background">
-            <div className="text-left">
-              <div className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-[-2px]">Visit Us</div>
-              <div className="text-xl font-bold leading-none tracking-tight">Get Directions</div>
-            </div>
+          <a
+            href="https://www.google.com/maps/dir/?api=1&destination=16.573863,82.003086"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-neutral-900 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+          >
+            Get Directions
           </a>
         </div>
       </div>
 
-      {/* FOREGROUND LAYER: The Physical Deep Blue Card */}
-      <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none" style={{ perspective: "1500px" }}>
-        <div
-          ref={mainCardRef}
-          className="main-card premium-depth-card relative overflow-hidden gsap-reveal flex items-center justify-center pointer-events-auto w-[92vw] md:w-[85vw] h-[92vh] md:h-[85vh] rounded-[32px] md:rounded-[40px]"
+      {/* The card */}
+      <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+        <div className="hero-card pointer-events-auto w-[92vw] md:w-[85vw] h-[88vh] md:h-[85vh] rounded-[32px] md:rounded-[40px] overflow-hidden"
+          style={{
+            background: "linear-gradient(145deg, #162C6D 0%, #0A101D 100%)",
+            boxShadow: "0 40px 80px -20px rgba(0,0,0,0.6)",
+          }}
         >
-          <div className="card-sheen" aria-hidden="true" />
-
-          {/* DYNAMIC RESPONSIVE GRID: Flex-col on mobile to force order, Grid on desktop */}
+          {/* Card inner layout */}
           <div className="relative w-full h-full max-w-7xl mx-auto px-4 lg:px-12 flex flex-col justify-evenly lg:grid lg:grid-cols-3 items-center lg:gap-8 z-10 py-6 lg:py-0">
 
-            {/* 1. TOP (Mobile) / RIGHT (Desktop): BRAND NAME */}
-            <div className="card-right-text gsap-reveal order-1 lg:order-3 flex justify-center lg:justify-end z-20 w-full">
-              <h2 className="text-5xl md:text-[6rem] lg:text-[7rem] font-black uppercase tracking-tighter text-card-silver-matte lg:mt-0">
+            {/* Brand name */}
+            <div className="card-content order-1 lg:order-3 flex justify-center lg:justify-end z-20 w-full">
+              <h2 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter"
+                style={{
+                  background: "linear-gradient(180deg, #fff 0%, #a1a1aa 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
                 {brandName}
               </h2>
             </div>
 
-            {/* 2. MIDDLE (Mobile) / CENTER (Desktop): IPHONE MOCKUP */}
-            <div className="mockup-scroll-wrapper order-2 lg:order-2 relative w-full h-[380px] lg:h-[600px] flex items-center justify-center z-10" style={{ perspective: "1000px" }}>
-
-              {/* Inner wrapper for safe CSS scaling that doesn't conflict with GSAP */}
-              <div className="relative w-full h-full flex items-center justify-center transform scale-[0.65] md:scale-85 lg:scale-100">
-
-                {/* The iPhone Bezel */}
-                <div
-                  ref={mockupRef}
-                  className="relative w-[280px] h-[580px] rounded-[3rem] iphone-bezel flex flex-col will-change-transform transform-style-3d"
+            {/* Phone mockup */}
+            <div className="card-phone order-2 lg:order-2 relative w-full h-[350px] lg:h-[550px] flex items-center justify-center z-10">
+              <div className="relative transform scale-[0.6] md:scale-75 lg:scale-90">
+                {/* iPhone shell */}
+                <div className="relative w-[280px] h-[580px] rounded-[3rem] bg-[#111] flex flex-col"
+                  style={{
+                    boxShadow: "inset 0 0 0 2px #52525b, inset 0 0 0 7px #000, 0 30px 60px -10px rgba(0,0,0,0.7)",
+                  }}
                 >
-                  {/* Physical Hardware Buttons */}
-                  <div className="absolute top-[120px] -left-[3px] w-[3px] h-[25px] hardware-btn rounded-l-md z-0" aria-hidden="true" />
-                  <div className="absolute top-[160px] -left-[3px] w-[3px] h-[45px] hardware-btn rounded-l-md z-0" aria-hidden="true" />
-                  <div className="absolute top-[220px] -left-[3px] w-[3px] h-[45px] hardware-btn rounded-l-md z-0" aria-hidden="true" />
-                  <div className="absolute top-[170px] -right-[3px] w-[3px] h-[70px] hardware-btn rounded-r-md z-0 scale-x-[-1]" aria-hidden="true" />
-
-                  {/* Inner Screen Container */}
-                  <div className="absolute inset-[7px] bg-[#050914] rounded-[2.5rem] overflow-hidden shadow-[inset_0_0_15px_rgba(0,0,0,1)] text-white z-10">
-                    <div className="absolute inset-0 screen-glare z-40 pointer-events-none" aria-hidden="true" />
-
-                    {/* Dynamic Island Notch */}
-                    <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[100px] h-[28px] bg-black rounded-full z-50 flex items-center justify-end px-3 shadow-[inset_0_-1px_2px_rgba(255,255,255,0.1)]">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)] animate-pulse" />
+                  {/* Screen */}
+                  <div className="absolute inset-[7px] bg-[#050914] rounded-[2.5rem] overflow-hidden text-white z-10">
+                    {/* Notch */}
+                    <div className="absolute top-[5px] left-1/2 -translate-x-1/2 w-[100px] h-[28px] bg-black rounded-full z-50 flex items-center justify-end px-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
                     </div>
 
-                    {/* App Interface */}
+                    {/* App content */}
                     <div className="relative w-full h-full pt-12 px-5 pb-8 flex flex-col">
-                      <div className="phone-widget flex justify-between items-center mb-8">
+                      <div className="flex justify-between items-center mb-8">
                         <div className="flex flex-col">
                           <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-bold mb-1">Status</span>
-                          <span className="text-xl font-bold tracking-tight text-white drop-shadow-md">Operational</span>
+                          <span className="text-xl font-bold tracking-tight text-white">Operational</span>
                         </div>
-                        <div className="w-9 h-9 rounded-full bg-white/5 text-neutral-200 flex items-center justify-center font-bold text-sm border border-white/10 shadow-lg shadow-black/50">SH</div>
+                        <div className="w-9 h-9 rounded-full bg-white/5 text-neutral-200 flex items-center justify-center font-bold text-sm border border-white/10">SH</div>
                       </div>
 
-                      <div className="phone-widget mb-6">
+                      <div className="mb-6">
                         <h4 className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-4 opacity-80">Quick Facts</h4>
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                           {QUICK_FACTS.map((fact, idx) => (
-                            <div key={idx} className="phone-widget widget-depth rounded-2xl p-3 flex items-center group">
-                              <div className={cn("w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mr-3 border border-white/10 shadow-inner group-hover:scale-105 transition-transform", fact.color)}>
-                                <fact.icon className="w-5 h-5 drop-shadow-md" />
+                            <div key={idx} className="rounded-2xl p-3 flex items-center bg-white/5 border border-white/5">
+                              <div className={cn("w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mr-3 border border-white/10", fact.color)}>
+                                <fact.icon className="w-5 h-5" />
                               </div>
                               <div className="flex flex-col">
                                 <span className="text-[11px] font-bold text-white tracking-tight">{fact.title}</span>
@@ -396,15 +211,17 @@ export function CinematicHero({
                         </div>
                       </div>
 
-                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[120px] h-[4px] bg-white/20 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-[120px] h-[4px] bg-white/20 rounded-full" />
                     </div>
                   </div>
                 </div>
 
-                {/* Floating Glass Badges */}
-                <div className="floating-badge absolute flex top-6 lg:top-12 left-[-15px] lg:left-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-3 lg:p-4 items-center gap-3 lg:gap-4 z-30">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-blue-500/20 to-blue-900/10 flex items-center justify-center border border-blue-400/30 shadow-inner">
-                    <Hospital className="text-blue-400 w-5 h-5 lg:w-6 lg:h-6 drop-shadow-lg" />
+                {/* Floating badges */}
+                <div className="card-badge absolute top-6 lg:top-12 left-[-15px] lg:left-[-80px] rounded-xl lg:rounded-2xl p-3 lg:p-4 flex items-center gap-3 z-30 bg-white/5 border border-white/10"
+                  style={{ boxShadow: "0 20px 40px -10px rgba(0,0,0,0.6)" }}
+                >
+                  <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-400/30">
+                    <Hospital className="text-blue-400 w-5 h-5 lg:w-6 lg:h-6" />
                   </div>
                   <div>
                     <p className="text-white text-xs lg:text-sm font-bold tracking-tight">24/7 ER</p>
@@ -412,26 +229,27 @@ export function CinematicHero({
                   </div>
                 </div>
 
-                <div className="floating-badge absolute flex bottom-12 lg:bottom-20 right-[-15px] lg:right-[-80px] floating-ui-badge rounded-xl lg:rounded-2xl p-3 lg:p-4 items-center gap-3 lg:gap-4 z-30">
-                  <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-b from-orange-500/20 to-orange-900/10 flex items-center justify-center border border-orange-400/30 shadow-inner">
-                    <Star className="text-orange-400 w-5 h-5 lg:w-6 lg:h-6 drop-shadow-lg" />
+                <div className="card-badge absolute bottom-12 lg:bottom-20 right-[-15px] lg:right-[-80px] rounded-xl lg:rounded-2xl p-3 lg:p-4 flex items-center gap-3 z-30 bg-white/5 border border-white/10"
+                  style={{ boxShadow: "0 20px 40px -10px rgba(0,0,0,0.6)" }}
+                >
+                  <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-orange-500/20 flex items-center justify-center border border-orange-400/30">
+                    <Star className="text-orange-400 w-5 h-5 lg:w-6 lg:h-6" />
                   </div>
                   <div>
                     <p className="text-white text-xs lg:text-sm font-bold tracking-tight">Expert Team</p>
                     <p className="text-orange-200/50 text-[10px] lg:text-xs font-medium">Top Specialists</p>
                   </div>
                 </div>
-
               </div>
             </div>
 
-            {/* 3. BOTTOM (Mobile) / LEFT (Desktop): ACCOUNTABILITY TEXT */}
-            <div className="card-left-text gsap-reveal order-3 lg:order-1 flex flex-col justify-center text-center lg:text-left z-20 w-full lg:max-w-none px-4 lg:px-0">
+            {/* Description text */}
+            <div className="card-content order-3 lg:order-1 flex flex-col justify-center text-center lg:text-left z-20 w-full px-4 lg:px-0">
               <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-bold mb-2 lg:mb-5 tracking-tight">
-                {cardHeading}
+                Transforming Medical Care.
               </h3>
-              <p className="block text-blue-100/70 text-sm md:text-base lg:text-lg font-normal leading-relaxed mx-auto lg:mx-0 max-w-sm lg:max-w-none">
-                {cardDescription}
+              <p className="text-blue-100/70 text-sm md:text-base lg:text-lg font-normal leading-relaxed mx-auto lg:mx-0 max-w-sm lg:max-w-none">
+                <span className="text-white font-semibold">Srinidhi Hospitals</span> combines compassionate care with advanced medical technology to provide comprehensive healthcare in Amalapuram.
               </p>
             </div>
 
